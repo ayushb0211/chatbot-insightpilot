@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Python Cache
+.pytest_cache/
+.mypy_cache/
+
+# Uploads
+uploads/
+
+# Temporary Files
+temp/
+tmp/
+
+# Database
+*.sqlite3
+*.db
+
+# ChromaDB
+chroma/
+
+# Frontend
+node_modules/
+dist/
+
+# OS Files
+.DS_Store
+Thumbs.db

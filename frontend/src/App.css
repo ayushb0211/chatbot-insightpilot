@@ -1,0 +1,77 @@
+.glass-panel{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.user-bubble{
+    background:rgba(124,92,252,.15);
+    backdrop-filter:blur(24px);
+    border:1px solid rgba(124,92,252,.3);
+}
+
+.glow-button{
+    box-shadow:0 0 20px rgba(148,125,255,.35);
+    transition:.3s ease;
+}
+
+.glow-button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 40px rgba(148,125,255,.65);
+}
+
+.ripple{
+    position:absolute;
+    border-radius:50%;
+    transform:scale(0);
+    animation:ripple .6s linear;
+    background:rgba(255,255,255,.35);
+    pointer-events:none;
+}
+
+@keyframes ripple{
+    to{
+        transform:scale(4);
+        opacity:0;
+    }
+}
+
+.message-fade{
+    animation:messageFade .35s ease;
+}
+
+@keyframes messageFade{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.sidebar-transition{
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+
+textarea::-webkit-scrollbar{
+    display:none;
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.silk-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+}
+
+.silk-bg canvas{
+    width:100%;
+    height:100%;
+    display:block;
+}
