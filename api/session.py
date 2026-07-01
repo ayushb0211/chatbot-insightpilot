@@ -9,7 +9,7 @@ from models.request_models import (
     DeleteSessionRequest
 )
 
-from services.session_manager import (
+from services.session_manager_v2 import (
     create_session,
     delete_session,
     session_exists

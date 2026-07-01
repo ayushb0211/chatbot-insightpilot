@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
+# load_dotenv()
+load_dotenv(override=True)
 
 class Settings:
 
@@ -35,12 +35,12 @@ class Settings:
         "temp/chroma"
     )
 
-    SESSION_TIMEOUT = int(
-        os.getenv(
-            "SESSION_TIMEOUT",
-            1800
-        )
-    )
+    # SESSION_TIMEOUT = int(
+    #     os.getenv(
+    #         "SESSION_TIMEOUT",
+    #         1800
+    #     )
+    # )
 
     CHUNK_SIZE = int(
         os.getenv(
@@ -57,4 +57,30 @@ class Settings:
     )
 
 
+    
+    SESSION_TIMEOUT = int(
+    os.getenv(
+        "SESSION_TIMEOUT"
+    )
+    )
+
+    REDIS_HOST = os.getenv(
+        "REDIS_HOST",
+        "localhost"
+    )
+
+    REDIS_PORT = int(
+        os.getenv(
+            "REDIS_PORT",
+            6379
+        )
+    )
+
+    REDIS_DB = int(
+        os.getenv(
+            "REDIS_DB",
+            0
+        )
+    )
+        
 settings = Settings()

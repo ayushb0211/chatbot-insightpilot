@@ -13,7 +13,7 @@ from fastapi import (
 
 from models.response_models import IngestResponse
 
-from services.session_manager import (
+from services.session_manager_v2 import (
     session_exists,
     update_session,
     get_upload_directory

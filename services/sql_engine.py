@@ -54,6 +54,30 @@ def clean_columns(df):
     return df
 
 
+# def ingest_csv(file_path: str, session_id: str):
+
+#     df = pd.read_csv(file_path)
+
+#     df = clean_columns(df)
+
+#     table_name = clean_table_name(
+#         file_path,
+#         session_id
+#     )
+
+#     conn = get_connection()
+
+#     df.to_sql(
+#         table_name,
+#         conn,
+#         if_exists="replace",
+#         index=False
+#     )
+
+#     conn.close()
+
+#     return table_name
+
 def ingest_csv(file_path: str, session_id: str):
 
     df = pd.read_csv(file_path)
@@ -67,52 +91,94 @@ def ingest_csv(file_path: str, session_id: str):
 
     conn = get_connection()
 
-    df.to_sql(
-        table_name,
-        conn,
-        if_exists="replace",
-        index=False
-    )
-
-    conn.close()
-
-    return table_name
-
-
-def ingest_excel(file_path: str, session_id: str):
-
-    conn = get_connection()
-
-    excel = pd.ExcelFile(file_path)
-
-    tables = []
-
-    for sheet in excel.sheet_names:
-
-        df = pd.read_excel(
-            file_path,
-            sheet_name=sheet
-        )
-
-        df = clean_columns(df)
-
-        table = clean_table_name(
-            f"{file_path}_{sheet}",
-            session_id
-        )
+    try:
 
         df.to_sql(
-            table,
+            table_name,
             conn,
             if_exists="replace",
             index=False
         )
 
-        tables.append(table)
+    finally:
 
-    conn.close()
+        conn.close()
 
-    return tables
+    return table_name
+
+# def ingest_excel(file_path: str, session_id: str):
+
+#     conn = get_connection()
+
+#     excel = pd.ExcelFile(file_path)
+
+#     tables = []
+
+#     for sheet in excel.sheet_names:
+
+#         df = pd.read_excel(
+#             file_path,
+#             sheet_name=sheet
+#         )
+
+#         df = clean_columns(df)
+
+#         table = clean_table_name(
+#             f"{file_path}_{sheet}",
+#             session_id
+#         )
+
+#         df.to_sql(
+#             table,
+#             conn,
+#             if_exists="replace",
+#             index=False
+#         )
+
+#         tables.append(table)
+
+#     conn.close()
+
+#     return tables
+
+def ingest_excel(file_path: str, session_id: str):
+
+    conn = get_connection()
+
+    try:
+
+        tables = []
+
+        with pd.ExcelFile(file_path) as excel:
+
+            for sheet in excel.sheet_names:
+
+                df = pd.read_excel(
+                    excel,
+                    sheet_name=sheet
+                )
+
+                df = clean_columns(df)
+
+                table = clean_table_name(
+                    f"{file_path}_{sheet}",
+                    session_id
+                )
+
+                df.to_sql(
+                    table,
+                    conn,
+                    if_exists="replace",
+                    index=False
+                )
+
+                tables.append(table)
+
+        return tables
+
+    finally:
+
+        conn.close()
 
 
 def get_schema(session_id: str):

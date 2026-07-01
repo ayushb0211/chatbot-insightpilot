@@ -179,7 +179,7 @@ export default function Landing() {
 
         <div className="max-w-4xl">
 
-          <motion.div
+          {/* <motion.div
             initial={{
               opacity: 0,
             }}
@@ -200,7 +200,7 @@ export default function Landing() {
 
             </span>
 
-          </motion.div>
+          </motion.div> */}
 
           <motion.h1
             initial={{

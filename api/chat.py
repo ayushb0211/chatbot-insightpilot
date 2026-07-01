@@ -7,10 +7,10 @@ from models.request_models import ChatRequest
 
 from models.response_models import ChatResponse
 
-from services.session_manager import (
+from services.session_manager_v2 import (
     session_exists,
     update_session,
-    cleanup_expired_sessions
+    # cleanup_expired_sessions
 )
 
 from services.rag import rag_query
@@ -24,7 +24,7 @@ router = APIRouter(tags=["Chat"])
 )
 def chat(request: ChatRequest):
 
-    cleanup_expired_sessions()
+    # cleanup_expired_sessions()
 
     if not session_exists(request.session_id):
 
