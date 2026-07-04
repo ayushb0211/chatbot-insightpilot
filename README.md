@@ -6,6 +6,9 @@ The application intelligently routes user queries through Vector Search, SQL Que
 
 ---
 ![landing](screenshots/image_landing.png)
+
+The chatbot answering organization-specific questions.
+
 ![chat](screenshots/image_docs.png)
 ![chat](screenshots/image_web_search.png)
 
