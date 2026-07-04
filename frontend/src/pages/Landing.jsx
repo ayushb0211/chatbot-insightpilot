@@ -1,53 +1,7 @@
-// import { motion } from "framer-motion";
-// import { useNavigate } from "react-router-dom";
-
-// export default function Landing() {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div className="landing glass">
-
-//       <motion.div
-//         className="hero"
-//         initial={{ opacity: 0, y: 40 }}
-//         animate={{ opacity: 1, y: 0 }}
-//         transition={{ duration: 0.8 }}
-//       >
-//         <motion.h1
-//           initial={{ opacity: 0 }}
-//           animate={{ opacity: 1 }}
-//           transition={{ delay: 0.2 }}
-//         >
-//           Dive Inside
-//         </motion.h1>
-
-//         <motion.p
-//           initial={{ opacity: 0 }}
-//           animate={{ opacity: 1 }}
-//           transition={{ delay: 0.35 }}
-//         >
-//           Chat with your documents using AI
-//         </motion.p>
-
-//         <motion.button
-//           whileHover={{
-//             scale: 1.05,
-//             boxShadow: "0 0 30px rgba(124,92,252,0.5)",
-//           }}
-//           whileTap={{ scale: 0.95 }}
-//           onClick={() => navigate("/chat")}
-//         >
-//           Start Chat →
-//         </motion.button>
-//       </motion.div>
-
-//     </div>
-//   );
-// }
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -120,6 +74,8 @@ export default function Landing() {
 
   return (
     <div className="relative min-h-screen overflow-hidden text-white">
+
+      {/* {toast.success("Candidate updated successfully")} */}
 
       {/* Navigation */}
 
@@ -217,7 +173,7 @@ export default function Landing() {
             className="text-7xl font-bold tracking-tight md:text-8xl"
           >
 
-            Dive Inside
+            Insight Pilot
 
           </motion.h1>
 

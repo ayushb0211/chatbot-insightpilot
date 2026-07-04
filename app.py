@@ -1,3 +1,8 @@
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
+
+from utils.logger import logger 
 from apscheduler.schedulers.background import BackgroundScheduler
 from services.cleanup import cleanup_expired_sessions
 
@@ -48,16 +53,39 @@ def startup():
 
     scheduler.start()
 
-    print("✅ Cleanup Scheduler Started")
+    logger.info("✅ Cleanup Scheduler Started")
     
 @app.on_event("shutdown")
 def shutdown():
 
     scheduler.shutdown()
 
-    print("🛑 Cleanup Scheduler Stopped")
+    logger.critical("🛑 Cleanup Scheduler Stopped")
 
 app.include_router(health_router, prefix="/api")
 app.include_router(session_router, prefix="/api")
 app.include_router(ingest_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
+
+
+# docker added react app
+
+frontend_dist = Path("frontend/dist")
+
+if frontend_dist.exists():
+
+    app.mount(
+        "/assets",
+        StaticFiles(directory=frontend_dist / "assets"),
+        name="assets",
+    )
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_react(full_path: str):
+
+        index_file = frontend_dist / "index.html"
+
+        if index_file.exists():
+            return FileResponse(index_file)
+
+        return {"detail": "Frontend not built."}

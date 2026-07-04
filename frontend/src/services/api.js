@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  // baseURL: "http://127.0.0.1:8000/api",
+  // baseURL: "http://192.168.220.84:8000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 export async function createSession() {
@@ -46,9 +48,11 @@ export async function askQuestion({
 }
 
 export async function deleteSession(sessionId) {
-  const { data } = await API.delete(
-    `/session/${sessionId}`
-  );
+  const { data } = await API.delete("/delete-session", {
+    data: {
+      session_id: sessionId,
+    },
+  });
 
   return data;
 }

@@ -1,3 +1,4 @@
+from utils.logger import logger
 from google import genai
 from google.genai import errors as genai_errors
 
@@ -43,7 +44,11 @@ def ask_gemini(prompt: str) -> str:
     for attempt in range(1, MAX_RETRIES + 1):
 
         try:
-
+            token_info = client.models.count_tokens(
+                model=settings.MODEL_NAME,
+                contents=prompt
+            )
+            logger.info(f"Input Tokens: {token_info.total_tokens}")
             response = client.models.generate_content(
                 model=settings.MODEL_NAME,
                 contents=prompt
@@ -58,7 +63,7 @@ def ask_gemini(prompt: str) -> str:
 
             wait = 2 ** attempt
 
-            print(
+            (
                 f"[Gemini Retry] Attempt {attempt}/{MAX_RETRIES} "
                 f"failed. Waiting {wait}s..."
             )

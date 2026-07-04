@@ -38,7 +38,7 @@ def create_new_session():
 
 
 @router.delete(
-    "/session",
+    "/delete-session",
     response_model=DeleteSessionResponse
 )
 def remove_session(request: DeleteSessionRequest):

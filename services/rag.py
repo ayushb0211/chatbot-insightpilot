@@ -1,3 +1,5 @@
+from utils.logger import logger
+import time
 import json
 
 from services.gemini_service import ask_gemini
@@ -7,6 +9,8 @@ from services.sql_engine import (
     execute_sql
 )
 from services.tavily_service import web_search
+
+from services.session_manager_v2 import get_session
 
 
 def rag_query(
@@ -25,140 +29,146 @@ def rag_query(
 
     Step 3:
         Search Tavily
-    """
+    """    
+    session = get_session(session_id)
+
+    has_vector = session.get("has_vector", False)
+    has_sql = session.get("has_sql", False)
+    
+    logger.info(f"Route -> Vector: {has_vector}, SQL: {has_sql}, Web: {enable_web_search}")
 
     # =====================================================
     # STEP 1 : VECTOR SEARCH
     # =====================================================
-
-    documents = similarity_search(
-        session_id=session_id,
-        query=user_query,
-        k=4
-    )
-
-    if documents:
-
-        context = "\n\n".join(
-            doc.page_content
-            for doc in documents
+    if has_vector:
+        documents = similarity_search(
+            session_id=session_id,
+            query=user_query,
+            k=4
         )
 
-        prompt = f"""
-You are an intelligent assistant.
 
-Question:
-{user_query}
+        if documents:
 
-Context:
-{context}
+            context = "\n\n".join(
+                doc.page_content
+                for doc in documents
+            )
 
-Instructions:
+            prompt = f"""
+    You are an intelligent assistant.
 
-- Answer ONLY using the provided context.
-- If the context contains the answer,
-  answer clearly.
+    Question:
+    {user_query}
 
-- If the answer is not available,
-  reply ONLY with:
+    Context:
+    {context}
 
-NOT_FOUND
-"""
+    Instructions:
 
-        answer = ask_gemini(prompt)
+    - Answer ONLY using the provided context.
+    - If the context contains the answer,
+    answer clearly.
 
-        if "NOT_FOUND" not in answer.upper():
+    - If the answer is not available,
+    reply ONLY with:
 
-            return {
-                "success": True,
-                "source": "vectorstore",
-                "answer": answer
-            }
+    NOT_FOUND
+    """
+            answer = ask_gemini(prompt)
+
+            if "NOT_FOUND" not in answer.upper():
+
+                return {
+                    "success": True,
+                    "source": "vectorstore",
+                    "answer": answer
+                }
 
     # =====================================================
     # STEP 2 : SQL SEARCH
     # =====================================================
+    if has_sql:
+        schema = get_schema(session_id)
 
-    schema = get_schema(session_id)
+        if schema:
 
-    if schema:
+            sql_prompt = f"""
+    You are an SQLite expert.
 
-        sql_prompt = f"""
-You are an SQLite expert.
+    Database Schema
 
-Database Schema
+    {schema}
 
-{schema}
+    User Question
 
-User Question
+    {user_query}
 
-{user_query}
+    Rules:
 
-Rules:
+    1. Generate ONLY SQLite SELECT query.
 
-1. Generate ONLY SQLite SELECT query.
+    2. Never generate INSERT,
+    UPDATE,
+    DELETE,
+    DROP,
+    ALTER.
 
-2. Never generate INSERT,
-UPDATE,
-DELETE,
-DROP,
-ALTER.
+    3. Output only SQL.
+    """
 
-3. Output only SQL.
-"""
+            sql_query = ask_gemini(sql_prompt)
 
-        sql_query = ask_gemini(sql_prompt)
+            sql_query = (
+                sql_query
+                .replace("```sql", "")
+                .replace("```", "")
+                .strip()
+            )
 
-        sql_query = (
-            sql_query
-            .replace("```sql", "")
-            .replace("```", "")
-            .strip()
-        )
+            sql_result = execute_sql(sql_query)
 
-        sql_result = execute_sql(sql_query)
+            if (
 
-        if (
+                sql_result["ok"]
 
-            sql_result["ok"]
+                and
 
-            and
+                sql_result["count"] > 0
 
-            sql_result["count"] > 0
+            ):
 
-        ):
+                answer_prompt = f"""
+    Question
 
-            answer_prompt = f"""
-Question
+    {user_query}
 
-{user_query}
+    SQL Query
 
-SQL Query
+    {sql_query}
 
-{sql_query}
+    SQL Result
 
-SQL Result
+    {json.dumps(sql_result['rows'], indent=2)}
 
-{json.dumps(sql_result['rows'], indent=2)}
+    Using ONLY these SQL results,
+    answer the user's question.
+    """
+                sql_answer = ask_gemini(answer_prompt)
 
-Using ONLY these SQL results,
-answer the user's question.
-"""
 
-            sql_answer = ask_gemini(answer_prompt)
+                return {
 
-            return {
+                    "success": True,
 
-                "success": True,
+                    "source": "sqlite",
 
-                "source": "sqlite",
+                    "sql_query": sql_query,
 
-                "sql_query": sql_query,
+                    "answer": sql_answer
 
-                "answer": sql_answer
-
-            }
-            
+                }
+                
     if not enable_web_search:
 
         return {

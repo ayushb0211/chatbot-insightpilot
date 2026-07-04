@@ -16,7 +16,8 @@ from models.response_models import IngestResponse
 from services.session_manager_v2 import (
     session_exists,
     update_session,
-    get_upload_directory
+    get_upload_directory,
+    update_session_flags
 )
 
 from services.document_loader import create_documents
@@ -90,6 +91,11 @@ async def ingest_files(
                     session_id,
                     docs
                 )
+                
+                update_session_flags(
+                    session_id,
+                    has_vector=True
+                )
 
                 results.append(
                     f"{file.filename} : Indexed {total_chunks} chunks"
@@ -100,6 +106,10 @@ async def ingest_files(
                 table = ingest_csv(
                     file_path,
                     session_id
+                )
+                update_session_flags(
+                    session_id,
+                    has_sql=True
                 )
 
                 results.append(
@@ -114,6 +124,11 @@ async def ingest_files(
                 tables = ingest_excel(
                     file_path,
                     session_id
+                )
+                
+                update_session_flags(
+                    session_id,
+                    has_sql=True
                 )
 
                 results.append(

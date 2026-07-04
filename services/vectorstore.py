@@ -1,5 +1,9 @@
+from utils.logger import logger
+
 import shutil
 from pathlib import Path
+
+import chromadb
 
 from langchain_chroma import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -80,18 +84,20 @@ def similarity_search(
 
 def delete_collection(session_id: str):
     """
-    Delete a session collection.
+    Delete a session-specific Chroma collection.
     """
 
+    collection = f"rag_{session_id}"
+
     try:
+        client = chromadb.PersistentClient(
+            path=settings.CHROMA_TEMP_DIR
+        )
 
-        vectorstore = get_vectorstore(session_id)
+        client.delete_collection(collection)
 
-        vectorstore.delete_collection()
-
-    except Exception:
-        pass
-
+    except Exception as e:
+        logger.error(f"Failed to delete Chroma collection '{collection}': {e}")
 
 def clear_all_chroma():
     """

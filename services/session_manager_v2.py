@@ -1,3 +1,4 @@
+from utils.logger import logger
 import json
 import os
 import shutil
@@ -21,6 +22,8 @@ def create_session() -> str:
     session_data = {
         "created_at": datetime.utcnow().isoformat(),
         "last_access": datetime.utcnow().isoformat(),
+        "has_vector": False,
+        "has_sql": False
     }
 
     redis_client.set(
@@ -86,9 +89,10 @@ def delete_session(session_id: str):
     """
 
     try:
+        logger.info(f"Deleting Chroma collection: {session_id}")
         delete_collection(session_id)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(e)
 
     try:
         delete_session_tables(session_id)
@@ -109,7 +113,7 @@ def delete_session(session_id: str):
             shutil.rmtree(upload_dir)
 
         except PermissionError:
-            print(f"Upload folder still in use: {upload_dir}")
+            logger.warning(f"Upload folder still in use: {upload_dir}")
             return False
 
     redis_client.delete(session_id)
@@ -138,3 +142,29 @@ def get_upload_directory(session_id: str):
     )
 
     return directory
+
+#helper to change bool val
+
+def update_session_flags(
+    session_id: str,
+    has_vector: bool = None,
+    has_sql: bool = None
+):
+    data = redis_client.get(session_id)
+
+    if not data:
+        return
+
+    session = json.loads(data)
+
+    if has_vector is not None:
+        session["has_vector"] = has_vector
+
+    if has_sql is not None:
+        session["has_sql"] = has_sql
+
+    redis_client.set(
+        session_id,
+        json.dumps(session),
+        ex=settings.SESSION_TIMEOUT
+    )

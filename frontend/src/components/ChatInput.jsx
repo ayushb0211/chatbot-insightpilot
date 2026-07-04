@@ -123,7 +123,7 @@ export default function ChatInput({
                 onChange(e.target.value)
               }
               onKeyDown={handleKeyDown}
-              placeholder="Ask Dive Inside anything..."
+              placeholder="Ask anything..."
               className="max-h-40 flex-1 resize-none bg-transparent px-2 py-3 text-white outline-none placeholder:text-zinc-500"
             />
 
@@ -143,7 +143,7 @@ export default function ChatInput({
           </div>
 
           <p className="mt-3 text-center text-[10px] uppercase tracking-[0.25em] text-zinc-500">
-            Dive Inside can make mistakes. Verify important information.
+            Insight Pilot can make mistakes. Verify important information.
           </p>
 
         </div>

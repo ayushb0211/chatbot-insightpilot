@@ -12,7 +12,7 @@ class Settings:
 
     MODEL_NAME = os.getenv(
         "MODEL_NAME",
-        "gemini-3-flash-preview"
+        "gemini-2.5-flash-lite"
     )
 
     EMBEDDING_MODEL = os.getenv(
@@ -45,14 +45,14 @@ class Settings:
     CHUNK_SIZE = int(
         os.getenv(
             "CHUNK_SIZE",
-            1000
+            700
         )
     )
 
     CHUNK_OVERLAP = int(
         os.getenv(
             "CHUNK_OVERLAP",
-            200
+            150
         )
     )
 

@@ -1,3 +1,4 @@
+from utils.logger import logger
 import redis
 
 from config import settings
@@ -22,12 +23,12 @@ def test_connection():
 
         redis_client.ping()
 
-        print("✅ Redis Connected")
+        logger.info("✅ Redis Connected")
 
         return True
 
     except Exception as e:
 
-        print(f"❌ Redis Connection Failed: {e}")
+        logger.critical(f"❌ Redis Connection Failed: {e}")
 
         return False
