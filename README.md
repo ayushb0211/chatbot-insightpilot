@@ -1,16 +1,28 @@
 # 🚀 Insight Pilot
 
-An Enterprise-grade AI-powered RAG (Retrieval-Augmented Generation) chatbot that enables users to interact with uploaded documents and structured datasets using natural language.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
+![React](https://img.shields.io/badge/React-19-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-The application intelligently routes user queries through Vector Search, SQL Querying, or Web Search to provide accurate and context-aware responses.
+Insight Pilot is an enterprise-grade AI-powered RAG chatbot that combines semantic document retrieval, SQL-based structured data querying, and intelligent web search to answer user questions with context-aware responses. 
+The system automatically routes each query to the most appropriate knowledge source, enabling accurate responses across unstructured documents, tabular datasets, and live web information.
 
 ---
-![landing](screenshots/image_landing.png)
+## 📸 Screenshots
 
-The chatbot answering organization-specific questions.
+### Landing Page
 
-![chat](screenshots/image_docs.png)
-![chat](screenshots/image_web_search.png)
+![Landing](screenshots/image_landing.png)
+
+### Document Chat
+
+![Documents](screenshots/image_docs.png)
+
+### Web Search
+
+![Web Search](screenshots/image_web_search.png)
 
 ## ✨ Features
 
@@ -74,19 +86,19 @@ The chatbot answering organization-specific questions.
 # 📂 Project Structure
 
 ```
-Insight-Pilot/
-
+chatbot-insightpilot/
 ├── api/
-├── config/
+├── frontend/
+├── services/
 ├── database/
 ├── models/
-├── services/
-├── uploads/
 ├── utils/
-├── frontend/
+├── screenshots/
 ├── app.py
-├── requirements.txt
-└── README.md
+├── config.py
+├── docker-compose.yml
+├── Dockerfile
+└── requirements.txt
 ```
 
 ---
