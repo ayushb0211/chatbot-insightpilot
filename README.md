@@ -5,6 +5,9 @@ An Enterprise-grade AI-powered RAG (Retrieval-Augmented Generation) chatbot that
 The application intelligently routes user queries through Vector Search, SQL Querying, or Web Search to provide accurate and context-aware responses.
 
 ---
+![landing](screenshots/image_landing.png)
+![chat](screenshots/image_docs.png)
+![chat](screenshots/image_web_search.png)
 
 ## ✨ Features
 
