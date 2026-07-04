@@ -82,5 +82,12 @@ class Settings:
             0
         )
     )
+    
+    REDIS_PASSWORD = str(
+        os.getenv(
+            "REDIS_PASSWORD",
+            ""
+        )
+    )
         
 settings = Settings()
